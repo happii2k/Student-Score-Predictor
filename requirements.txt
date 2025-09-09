@@ -8,4 +8,5 @@ setuptools
 xgboost
 catboost
 dill
+Flask
 -e .
