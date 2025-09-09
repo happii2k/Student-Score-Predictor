@@ -9,6 +9,8 @@ from src.components.exception.exception import CustomException
 from src.components.logger.logger import logging
 from src.components.component.data_transforming import DataTransformation
 
+from src.components.component.model_trainer import ModelTrainer
+
 
   #  from src.components.exception import CustomException
    # from src.components.logger import logging
@@ -55,4 +57,9 @@ if __name__ == "__main__":
 
     dataTransformation = DataTransformation()
     dataTransformation.initiate_data_transformation(train_data, test_data)
+
+    Train_ARR , Test_arr , _ = dataTransformation.initiate_data_transformation(train_data, test_data)
+
+    modeltrainer = ModelTrainer()
+    modeltrainer.initiate_model_trainer(Train_ARR , Test_arr )
 
