@@ -11,6 +11,13 @@ from src.components.component.data_transforming import DataTransformation
 
 from src.components.component.model_trainer import ModelTrainer
 
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017/")   # Use your MongoDB URI
+db = client["SchoolData"]
+collection = db["data1"]
+
+
 
   #  from src.components.exception import CustomException
    # from src.components.logger import logging
@@ -29,7 +36,16 @@ class DataIngestion:
     def initiate_data_ingestion(self):
         logging.info("Data Ingestion method starts")
         try:
-            df = pd.read_csv('notebook/data/stud.csv')
+            # Read all documents
+            data_cursor = collection.find()
+            df = pd.DataFrame(list(data_cursor))
+            if '_id' in df.columns:
+                 df = df.drop('_id', axis=1)
+
+            df = pd.DataFrame(list(collection.find()))
+            print(df.shape)
+
+
             logging.info("Dataset read as pandas dataframe")
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
@@ -38,6 +54,7 @@ class DataIngestion:
             logging.info("Raw data is saved")
 
             train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
+
 
             train_set.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
             test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
